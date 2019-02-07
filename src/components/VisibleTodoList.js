@@ -1,18 +1,8 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { TodoListItems } from "./TodoListItems";
+import TodoList from "./TodoList";
 
 export default class VisibleTodoList extends Component {
-  componentDidMount() {
-    this.unsubscribe = this.context.store.subscribe(() => {
-      this.forceUpdate();
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
   getVisibleTodos(todos, filter) {
     switch (filter) {
       case "SHOW_ALL":
@@ -26,27 +16,11 @@ export default class VisibleTodoList extends Component {
     }
   }
 
-  handleDelTodoClick(id) {
-    this.context.store.dispatch({
-      type: "DEL_TODO",
-      id: id
-    });
-  }
-
-  handleToggleTodoClick(id) {
-    this.context.store.dispatch({ type: "TOGGLE_TODO", id: id });
-  }
-
   render() {
-    const state = this.context.store.getState();
+    const { store } = this.context;
+    const state = store.getState();
 
-    return (
-      <TodoListItems
-        todos={this.getVisibleTodos(state.todos, state.filter)}
-        onDelTodoClick={this.handleDelTodoClick.bind(this)}
-        onToggleTodoClick={this.handleToggleTodoClick.bind(this)}
-      />
-    );
+    return <TodoList todos={this.getVisibleTodos(state.todos, state.filter)} />;
   }
 }
 VisibleTodoList.contextTypes = {

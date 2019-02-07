@@ -1,19 +1,38 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { AddTodo } from "./AddTodo";
-import { Filter } from "./Filter";
-import VisibleTodoList from "./VisibleTodoList";
+import { TodoListItems } from "./TodoListItems";
 
 export default class TodoList extends Component {
+  componentDidMount() {
+    this.unsubscribe = this.context.store.subscribe(() => {
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  handleDelTodoClick(id) {
+    this.context.store.dispatch({
+      type: "DEL_TODO",
+      id: id
+    });
+  }
+
+  handleToggleTodoClick(id) {
+    this.context.store.dispatch({ type: "TOGGLE_TODO", id: id });
+  }
+
   render() {
+    //const state = this.context.store.getState();
+
     return (
-      <div>
-        <div className="todo-header shadow">
-          <AddTodo>ADD_TODO</AddTodo>
-          <Filter currentFilter={this.context.store.getState().filter} />
-        </div>
-        <VisibleTodoList />
-      </div>
+      <TodoListItems
+        todos={this.props.todos}
+        onDelTodoClick={this.handleDelTodoClick.bind(this)}
+        onToggleTodoClick={this.handleToggleTodoClick.bind(this)}
+      />
     );
   }
 }

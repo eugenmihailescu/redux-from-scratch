@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Provider from "./lib/Provider";
-import TodoList from "./components/TodoList";
+import TodoApp from "./components/TodoApp";
 import { SimpleRedux as createStore } from "./lib/SimpleRedux";
 import { todoReducers as all_reducer } from "./reducers/todoReducer";
 
@@ -25,7 +25,7 @@ const logging = action => {
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <TodoList />
+      <TodoApp />
     </Provider>,
     document.getElementById("root")
   );
