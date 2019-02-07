@@ -1,9 +1,7 @@
 import React from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-export const Alert = ({ children, onHide, timeout }, { store }) => {
-  setTimeout(onHide, timeout);
-
+export const Alert = ({ children }, { store }) => {
   return (
     <div className="alert shadow">
       <span>{children}</span>

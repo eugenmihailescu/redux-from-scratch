@@ -37,10 +37,6 @@ export default class VisibleTodoList extends Component {
     this.context.store.dispatch({ type: "TOGGLE_TODO", id: id });
   }
 
-  handleHideAlert(id) {
-    this.context.store.dispatch({ type: "ADD_TODO_ALERTED", id: id });
-  }
-
   render() {
     const state = this.context.store.getState();
 
@@ -49,7 +45,6 @@ export default class VisibleTodoList extends Component {
         todos={this.getVisibleTodos(state.todos, state.filter)}
         onDelTodoClick={this.handleDelTodoClick.bind(this)}
         onToggleTodoClick={this.handleToggleTodoClick.bind(this)}
-        onHideAlert={this.handleHideAlert.bind(this)}
       />
     );
   }

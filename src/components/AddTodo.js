@@ -4,10 +4,14 @@ import PropTypes from "prop-types";
 let next_id;
 
 export const AddTodo = ({ children }, { store }) => {
-  let input;
+  let ALERT_DEFAULT_TIMEOUT = 1500;
+
+  let input, last_id;
 
   if (undefined === next_id) {
-    next_id = store.getState().todos.length;
+    last_id = store.getState().todos.length;
+  } else {
+    last_id = next_id;
   }
 
   const handleAddTodo = input => {
@@ -18,16 +22,20 @@ export const AddTodo = ({ children }, { store }) => {
       store.dispatch({
         type: "ADD_TODO",
         text: input.value,
-        id: next_id
+        id: last_id
       });
       store.dispatch({
         type: "NEW_TODO_ALERT",
-        id: next_id
+        id: last_id
       });
+      setTimeout(
+        () => store.dispatch({ type: "ADD_TODO_ALERTED", id: last_id }),
+        ALERT_DEFAULT_TIMEOUT
+      );
 
       input.className = null;
       input.value = "";
-      next_id += 1;
+      next_id = last_id + 1;
     }
 
     input.focus();

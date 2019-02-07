@@ -3,20 +3,13 @@ import React from "react";
 import { TodoItem } from "./TodoItem";
 import { Alert } from "./Alert";
 
-export const TodoListItems = ({
-  todos,
-  onToggleTodoClick,
-  onDelTodoClick,
-  onHideAlert
-}) => {
+export const TodoListItems = ({ todos, onToggleTodoClick, onDelTodoClick }) => {
   const new_todos = todos.filter(t => !t.alerted);
 
   const new_todo_alert = new_todos.map((todo, index) => (
-    <Alert
-      key={index}
-      timeout={1500}
-      onHide={() => onHideAlert(todo.id)}
-    >{`A new todo item has been created, id=${todo.id}`}</Alert>
+    <Alert key={index}>{`A new todo item has been created, id=${
+      todo.id
+    }`}</Alert>
   ));
 
   const todo_list = todos.map((todo, index) => (
