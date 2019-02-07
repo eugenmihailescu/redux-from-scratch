@@ -1,19 +1,14 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { TodoListItems } from "./TodoListItems";
+import React from "react";
+import { connect } from "react-redux";
+import TodoList from "./TodoList";
 
-export default class VisibleTodoList extends Component {
-  componentDidMount() {
-    this.unsubscribe = this.context.store.subscribe(() => {
-      this.forceUpdate();
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  getVisibleTodos(todos, filter) {
+/**
+ * @description The filtered todos
+ * @param {Object} { todos, filter }
+ * @returns {React.FunctionComponent}
+ */
+const VisibleTodoList = ({ todos, filter }) => {
+  const getVisibleTodos = (todos, filter) => {
     switch (filter) {
       case "SHOW_ALL":
         return todos;
@@ -24,31 +19,29 @@ export default class VisibleTodoList extends Component {
       default:
         return todos;
     }
-  }
+  };
 
-  handleDelTodoClick(id) {
-    this.context.store.dispatch({
-      type: "DEL_TODO",
-      id: id
-    });
-  }
-
-  handleToggleTodoClick(id) {
-    this.context.store.dispatch({ type: "TOGGLE_TODO", id: id });
-  }
-
-  render() {
-    const state = this.context.store.getState();
-
-    return (
-      <TodoListItems
-        todos={this.getVisibleTodos(state.todos, state.filter)}
-        onDelTodoClick={this.handleDelTodoClick.bind(this)}
-        onToggleTodoClick={this.handleToggleTodoClick.bind(this)}
-      />
-    );
-  }
-}
-VisibleTodoList.contextTypes = {
-  store: PropTypes.object
+  return <TodoList todos={getVisibleTodos(todos, filter)} />;
 };
+
+/***************************************************
+ * Connect the VisibleTodoList component to the Redux store
+ **************************************************/
+
+/**
+ * @description Map the store's state to the VisibleTodoList props
+ * @param {Object} state The store's current state
+ * @returns {Object}
+ */
+const mapStateToProps = state => {
+  return {
+    todos: state.todos,
+    filter: state.filter
+  };
+};
+
+// export as Rect.Component the Provider wrapped around the VisibleTodoList component
+export default connect(
+  mapStateToProps,
+  null
+)(VisibleTodoList);
