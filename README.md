@@ -9,4 +9,4 @@ Obviously it requires both react and react-dom, since it's a React dependent app
 
 All you need is NodeJS preinstalled then a simple `npm install` followed by `npm run start` should be enough to start the application.
 
-@update: the [master](https://github.com/eugenmihailescu/redux-from-scratch) branch contains the version which uses the Redux and React-Redux libraries. The transition from "my Redux" (thanks to Dan's step-by-step guide) to the public React Redux libraries was just like a breeze. Now Redux makes more sense than ever.
+@update: the [master](https://github.com/eugenmihailescu/redux-from-scratch) branch contains the version which uses the Redux and React-Redux libraries. The transition from "[my Redux](https://github.com/eugenmihailescu/redux-from-scratch/tree/redux-from-scratch/src/lib)" (thanks to Dan's step-by-step guide) to the public React Redux libraries was just like a breeze. Now Redux makes more sense than ever.
