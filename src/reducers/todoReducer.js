@@ -1,4 +1,4 @@
-import { combineReducers } from "../lib/SimpleRedux";
+import { combineReducers } from "redux";
 
 const todoAction = (state, action) => {
   switch (action.type) {

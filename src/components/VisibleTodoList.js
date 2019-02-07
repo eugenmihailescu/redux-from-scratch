@@ -1,9 +1,14 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React from "react";
+import { connect } from "react-redux";
 import TodoList from "./TodoList";
 
-export default class VisibleTodoList extends Component {
-  getVisibleTodos(todos, filter) {
+/**
+ * @description The filtered todos
+ * @param {Object} { todos, filter }
+ * @returns {React.FunctionComponent}
+ */
+const VisibleTodoList = ({ todos, filter }) => {
+  const getVisibleTodos = (todos, filter) => {
     switch (filter) {
       case "SHOW_ALL":
         return todos;
@@ -14,15 +19,29 @@ export default class VisibleTodoList extends Component {
       default:
         return todos;
     }
-  }
+  };
 
-  render() {
-    const { store } = this.context;
-    const state = store.getState();
-
-    return <TodoList todos={this.getVisibleTodos(state.todos, state.filter)} />;
-  }
-}
-VisibleTodoList.contextTypes = {
-  store: PropTypes.object
+  return <TodoList todos={getVisibleTodos(todos, filter)} />;
 };
+
+/***************************************************
+ * Connect the VisibleTodoList component to the Redux store
+ **************************************************/
+
+/**
+ * @description Map the store's state to the VisibleTodoList props
+ * @param {Object} state The store's current state
+ * @returns {Object}
+ */
+const mapStateToProps = state => {
+  return {
+    todos: state.todos,
+    filter: state.filter
+  };
+};
+
+// export as Rect.Component the Provider wrapped around the VisibleTodoList component
+export default connect(
+  mapStateToProps,
+  null
+)(VisibleTodoList);

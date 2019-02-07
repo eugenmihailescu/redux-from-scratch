@@ -1,16 +1,27 @@
-import PropTypes from "prop-types";
 import React from "react";
+import { connect } from "react-redux";
+import { getToggleTodoAction, getDeleteTodoAction } from "../actions/creators";
 
-export const TodoItem = ({ todo, onToggle, onDelete }, { store }) => {
+/**
+ * @description A todo item
+ * @param {Object} { todo, dispatch }
+ * @returns {React.FunctionComponent}
+ */
+const TodoItem = ({ todo, dispatch }) => {
   return (
     <li className={todo.completed ? "completed" : null}>
-      <span>{todo.id}</span> <span onClick={onToggle}>{todo.text}</span>
-      <button disabled={todo.completed} onClick={onDelete}>
+      <span>{todo.id}</span>{" "}
+      <span onClick={() => dispatch(getToggleTodoAction(todo.id))}>
+        {todo.text}
+      </span>
+      <button
+        disabled={todo.completed}
+        onClick={() => dispatch(getDeleteTodoAction(todo.id))}
+      >
         X
       </button>
     </li>
   );
 };
-TodoItem.contextTypes = {
-  store: PropTypes.object
-};
+
+export default connect()(TodoItem);

@@ -1,27 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Provider from "./lib/Provider";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
 import TodoApp from "./components/TodoApp";
-import { SimpleRedux as createStore } from "./lib/SimpleRedux";
 import { todoReducers as all_reducer } from "./reducers/todoReducer";
 
-let store = new createStore(all_reducer, null, {
-  todos: [],
-  filter: "SHOW_ALL"
-});
+// debuggin console
+const logger = ({ getState, dispatch }) => {
+  return next => action => {
+    console.log("will dispatch", action);
 
-let subscribers = [];
+    const result = next(action);
 
-window.addEventListener("unload", () => {
-  store.saveToStorage(); // does not supports browser env, works only within NodeJS env
+    console.log("state after dispatch", getState());
 
-  subscribers.forEach(unsubscribe => unsubscribe());
-});
-
-const logging = action => {
-  console.log(action, store.getState());
+    return result;
+  };
 };
 
+const store = createStore(all_reducer, undefined, applyMiddleware(logger));
+
+/**
+ * @description The ReactDOM main function
+ */
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
@@ -30,9 +31,6 @@ const render = () => {
     document.getElementById("root")
   );
 };
-
-subscribers.push(store.subscribe(logging));
-subscribers.push(store.subscribe(render));
 
 render();
 

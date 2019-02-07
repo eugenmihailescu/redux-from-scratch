@@ -1,6 +1,5 @@
 import { todoReducers } from "../todoReducer";
 import deepFreeze from "deep-freeze-node";
-import { getUnpackedSettings } from "http2";
 
 const getTodo = (id, args = {}) => {
   return {
@@ -10,6 +9,10 @@ const getTodo = (id, args = {}) => {
     alerted: false,
     ...args
   };
+};
+
+const getInitialState = () => {
+  return { todos: [], filter: "SHOW_ALL" };
 };
 
 const addNewTodo = (id, text, state) => {
@@ -32,7 +35,7 @@ const delTodo = (id, state) => {
 *         ADD_TODO x1
 /*******************************/
 test("add 1x todo", () => {
-  const stateBefore = [];
+  const stateBefore = getInitialState();
   deepFreeze(stateBefore);
 
   const stateAfter = [getTodo(1)];
@@ -45,7 +48,7 @@ test("add 1x todo", () => {
 *         ADD_TODO x2
 /*******************************/
 test("add 2x todo", () => {
-  const stateBefore = [];
+  const stateBefore = getInitialState();
   deepFreeze(stateBefore);
 
   let states = [addNewTodo(1, "todo1", stateBefore)]; //add new
@@ -61,7 +64,7 @@ test("add 2x todo", () => {
 *       ADD_TODO_ALERTED
 /*******************************/
 test("set 2x todo alert as read", () => {
-  const stateBefore = [];
+  const stateBefore = getInitialState();
   deepFreeze(stateBefore);
 
   let states = [addNewTodo(1, "todo1", stateBefore)]; //add new
@@ -85,7 +88,7 @@ test("set 2x todo alert as read", () => {
 *         TOGGLE_TODO
 /*******************************/
 test("toggle back and forth 2x todo", () => {
-  const stateBefore = [];
+  const stateBefore = getInitialState();
   deepFreeze(stateBefore);
 
   let states = [addNewTodo(1, "todo1", stateBefore)]; //add new
@@ -123,7 +126,7 @@ test("toggle back and forth 2x todo", () => {
 *         DEL_TODO
 /*******************************/
 test("delete 3x todo outside-in", () => {
-  const stateBefore = [];
+  const stateBefore = getInitialState();
   deepFreeze(stateBefore);
 
   let states = [addNewTodo(1, "todo1", stateBefore)]; //add new
@@ -152,5 +155,5 @@ test("delete 3x todo outside-in", () => {
   states.push(delTodo(3, states[4])); // remove the #3 and last todo
 
   // expect the 3rd todo only
-  expect(states[5].todos).toEqual(stateBefore);
+  expect(states[5].todos).toEqual([]);
 });

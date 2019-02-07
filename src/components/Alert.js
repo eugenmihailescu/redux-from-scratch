@@ -1,13 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-export const Alert = ({ children }, { store }) => {
+/**
+ * @description An generic alert box
+ * @param {Object} { children }
+ * @returns {React.FunctionComponent}
+ */
+const Alert = ({ children }) => {
   return (
     <div className="alert shadow">
       <span>{children}</span>
     </div>
   );
 };
-Alert.contextTypes = {
-  store: PropTypes.object
-};
+
+export default Alert;

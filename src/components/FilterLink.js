@@ -1,27 +1,51 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React from "react";
+import { connect } from "react-redux";
+import { getSetFilterAction } from "../actions/creators";
 
-export class FilterLink extends Component {
-  handleFilterClick(filter) {
-    this.context.store.dispatch({
-      type: "SET_VISIBILITY_FILTER",
-      filter
-    });
-  }
-
-  render() {
-    let filter = this.props.filter;
-    return (
-      <button
-        className={filter === this.props.currentFilter ? "active" : null}
-        onClick={this.handleFilterClick.bind(this, filter)}
-      >
-        {this.props.children}
-      </button>
-    );
-  }
-}
-
-FilterLink.contextTypes = {
-  store: PropTypes.object
+/**
+ * @description A filter link component
+ * @param {Object} { filter, currentFilter, children, applyFilter }
+ * @returns {React.FunctionComponent}
+ */
+const FilterLink = ({ filter, currentFilter, children, applyFilter }) => {
+  return (
+    <button
+      className={filter === currentFilter ? "active" : null}
+      onClick={() => applyFilter(filter)}
+    >
+      {children}
+    </button>
+  );
 };
+
+/***************************************************
+ * Connect the FilterLink component to the Redux store
+ **************************************************/
+
+/**
+ * @description Map the store's state to the FilterLink props
+ * @param {Object} state
+ * @returns {Object}
+ */
+const mapStateToProps = state => {
+  return {
+    currentFilter: state.filter
+  };
+};
+
+/**
+ * @description Map the store's dispatcher to the FilterLink props
+ * @param {*} dispatch
+ * @returns
+ */
+const mapDispatchToProps = dispatch => {
+  return {
+    applyFilter: filter => dispatch(getSetFilterAction(filter))
+  };
+};
+
+// export as Rect.Component the Provider wrapped around the FilterLink component
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FilterLink);

@@ -1,15 +1,24 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import {
+  getAddTodoAction,
+  getNewTodoAlertAction,
+  getTodoAlertedAction
+} from "../actions/creators";
 
+const ALERT_DEFAULT_TIMEOUT = 1500;
 let next_id;
 
-export const AddTodo = ({ children }, { store }) => {
-  let ALERT_DEFAULT_TIMEOUT = 1500;
-
+/**
+ * @description The AddTodo input container
+ * @param {Object} { todos, children, addTodo }
+ * @returns {React.FunctionComponent}
+ */
+const AddTodo = ({ todos, children, addTodo }) => {
   let input, last_id;
 
   if (undefined === next_id) {
-    last_id = store.getState().todos.length;
+    last_id = todos.length;
   } else {
     last_id = next_id;
   }
@@ -19,19 +28,7 @@ export const AddTodo = ({ children }, { store }) => {
     if (!result) {
       input.className = "error";
     } else {
-      store.dispatch({
-        type: "ADD_TODO",
-        text: input.value,
-        id: last_id
-      });
-      store.dispatch({
-        type: "NEW_TODO_ALERT",
-        id: last_id
-      });
-      setTimeout(
-        () => store.dispatch({ type: "ADD_TODO_ALERTED", id: last_id }),
-        ALERT_DEFAULT_TIMEOUT
-      );
+      addTodo(input.value, last_id);
 
       input.className = null;
       input.value = "";
@@ -57,6 +54,42 @@ export const AddTodo = ({ children }, { store }) => {
     </div>
   );
 };
-AddTodo.contextTypes = {
-  store: PropTypes.object
+
+/***************************************************
+ * Connect the AddTodo component to the Redux store
+ **************************************************/
+
+/**
+ * @description Map the store's state to the AddTodo props
+ * @param {Object} state
+ * @returns {Object}
+ */
+const mapStateToProps = state => {
+  return {
+    todos: state.todos
+  };
 };
+
+/**
+ * @description Map the store's dispatcher to the AddTodo props
+ * @param {Function} dispatch
+ * @returns {Object}
+ */
+const mapDispatchToProps = dispatch => {
+  return {
+    addTodo: (text, id) => {
+      dispatch(getAddTodoAction(id, text));
+      dispatch(getNewTodoAlertAction(id));
+      setTimeout(
+        () => dispatch(getTodoAlertedAction(id)),
+        ALERT_DEFAULT_TIMEOUT
+      );
+    }
+  };
+};
+
+// export as Rect.Component the Provider wrapped around the AddTodo component
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddTodo);
