@@ -1,4 +1,4 @@
-import { todoReducers } from "../todoReducer";
+import { todoReducers } from "../index";
 import deepFreeze from "deep-freeze-node";
 
 const getTodo = (id, args = {}) => {

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import TodoApp from "./components/TodoApp";
-import { todoReducers as all_reducer } from "./reducers/todoReducer";
+import { todoReducers as all_reducer } from "./reducers/index";
 
 // debuggin console
 const logger = ({ getState, dispatch }) => {
